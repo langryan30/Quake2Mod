@@ -342,9 +342,20 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 	G_FreeEdict (self);
 }
 
-//ryan mod follow along
+//ryan mod follow along, implemented but it is extremely dumb, not in game now
 void blaster_think(edict_t* self) {//exists?
 	if (!self)return;
+	vec3_t aimdir = { 0 };
+	
+	aimdir[0] = crandom();
+	aimdir[1] = crandom();
+	aimdir[2] = crandom();
+
+	VectorNormalize(aimdir);
+
+	fire_grenade(self, self->s.origin, aimdir, 30, 1000, 2, 30);
+	fire_grenade(self, self->s.origin, aimdir, 30, 1000, 2, 30);
+	fire_grenade(self, self->s.origin, aimdir, 30, 1000, 2, 30);
 }
 void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int effect, qboolean hyper)
 {
@@ -375,6 +386,7 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 	bolt->owner = self;
 	bolt->touch = blaster_touch;
 	bolt->nextthink = level.time + 2;
+	//bolt->nextthink = level.time + 0.2;
 	bolt->think = G_FreeEdict;
 	//bolt->think = blaster_think;
 

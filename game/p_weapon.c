@@ -815,13 +815,13 @@ BLASTER / HYPERBLASTER
 
 void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, int effect)
 {
-	vec3_t	forward, right;
+	vec3_t	forward, right, up; //added up
 	vec3_t	start;
 	vec3_t	offset;
 
 	if (is_quad)
 		damage *= 4;
-	AngleVectors (ent->client->v_angle, forward, right, NULL);
+	AngleVectors (ent->client->v_angle, forward, right, up);//up was NULL
 	VectorSet(offset, 24, 8, ent->viewheight-8);
 	VectorAdd (offset, g_offset, offset);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
@@ -829,7 +829,33 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 10, effect, hyper);//Ryan test mod, changed speed of blaster from 1000 to 10
+	//fire_blaster (ent, start, forward, damage, 10, effect, hyper);//Ryan test mod, changed speed of blaster from 1000 to 10
+	//Ryan modding blaster to shoot railgun ammo and bfg ammo
+	fire_rail(ent, start, forward, damage, 250);
+	
+	//start[0] += up[0] * 20;
+	//start[1] += up[1] * 20;
+	start[2] += up[2] * 30;
+	fire_bfg(ent, start, forward, damage, 400, 1000);
+
+	//start[0] -= up[0] * 40;
+	//start[1] -= up[1] * 40;
+	start[2] -= up[2] * 60;
+	fire_bfg(ent, start, forward, damage, 400, 1000);
+
+	start[2] += up[2] * 30;
+	start[0] += right[0] * 30;
+	start[1] += right[1] * 30;
+	start[2] += right[2] * 30;
+	fire_bfg(ent, start, forward, damage, 400, 1000);
+
+	start[0] -= right[0] * 60;
+	start[1] -= right[1] * 60;
+	start[2] -= right[2] * 60;
+	fire_bfg(ent, start, forward, damage, 400, 1000);
+	start[0] -= right[0] * 30;
+	start[1] -= right[1] * 30;
+	start[2] -= right[2] * 30;
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
