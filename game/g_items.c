@@ -80,7 +80,8 @@ gitem_t	*FindItemByClassname (char *classname)
 	gitem_t	*it;
 
 	it = itemlist;
-	for (i=0 ; i<game.num_items ; i++, it++)
+	for (i=0 ; i<game.num_items ; i++, it++)//incrementing pointer, moves the size of an item in memory works as for(it = &itemList[1]; it->classname; it++). Then can remove continue
+		//stops when classname is null
 	{
 		if (!it->classname)
 			continue;
@@ -1323,7 +1324,7 @@ always owned, never in the world
 /* icon */		"w_shotgun",
 /* pickup */	"Shotgun",
 		0,
-		1,
+		1,//ammo usage
 		"Shells",
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_SHOTGUN,
